@@ -32,9 +32,110 @@ Cloth::~Cloth() {
 
 void Cloth::buildGrid() {
   // TODO (Part 1.1): Build a grid of masses.
+  point_masses.reserve(num_height_points * num_width_points);
+  if (orientation == 0) {
+    for (int i = 0; i < num_height_points; i++) {
+      for (int j = 0; j < num_width_points; j++) {
+        Vector3D v = Vector3D(j * width/(num_width_points - 1), 1, i * height/(num_height_points - 1));
+        bool p = false;
+        for (vector<int> vec : pinned) {
+          if (vec[0] == j && vec[1] == i) {
+            p = true;
+          }
+        }
+        PointMass m = PointMass(v, p);
+        point_masses.emplace_back(m);
+        //cout << i * num_height_points + j;
+        //point_masses[i * num_height_points + j] = m;
+      }
+    }
+  } else {
+    for (int i = 0; i < num_height_points; i++) {
+      for (int j = 0; j < num_width_points; j++) {
+        float z = 0;
+        if (rand() < 0.5) {
+          z = rand()/1000.0;
+        } else {
+          z = rand()/-1000.0;
+        }
+        Vector3D v = Vector3D(j * width/(num_width_points - 1), i, i * height/(num_height_points - 1));
+        bool p = false;
+        for (vector<int> vec : pinned) {
+          if (vec[0] == j && vec[1] == i) {
+            p = true;
+          }
+        }
+        PointMass m = PointMass(v, p);
+        point_masses.emplace_back(m);
+        //point_masses[i * num_height_points + j] = m;
+      }
+    }
+  }
   
 
   // TODO (Part 1.2): Add springs 
+  //springs.reserve(num_height_points * num_width_points * 6);
+  if (orientation == 0) {
+    for (int i = 0; i < num_height_points; i++) {
+      for (int j = 0; j < num_width_points; j++) {
+        if (j > 0) {
+          Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[i * num_height_points + j - 1], 0);
+          springs.emplace_back(s);
+        }
+        if (i > 0) {
+          Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[(i - 1) * num_height_points + j], 0);
+          springs.emplace_back(s);
+          if (j > 0) {
+            Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[(i - 1) * num_height_points + j - 1], 1);
+            springs.emplace_back(s);
+          }
+          if (j < num_width_points - 1) {
+            Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[(i - 1) * num_height_points + j + 1], 1);
+            springs.emplace_back(s);
+          }
+        }
+        if (j > 1) {
+          Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[i * num_height_points + j - 2], 2);
+          springs.emplace_back(s);
+        }
+        if (i > 1) {
+          Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[(i - 2) * num_height_points + j], 2);
+          springs.emplace_back(s);
+        }
+        //cout << i * num_height_points + j;
+        //point_masses[i * num_height_points + j] = m;
+      }
+    }
+  } else {
+    for (int i = 0; i < num_height_points; i++) {
+      for (int j = 0; j < num_width_points; j++) {
+        if (j > 0) {
+          Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[i * num_height_points + j - 1], 0);
+          springs.emplace_back(s);
+        }
+        if (i > 0) {
+          Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[(i - 1) * num_height_points + j], 0);
+          springs.emplace_back(s);
+          if (j > 0) {
+            Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[(i - 1) * num_height_points + j - 1], 1);
+            springs.emplace_back(s);
+          }
+          if (j < num_width_points - 1) {
+            Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[(i - 1) * num_height_points + j + 1], 1);
+            springs.emplace_back(s);
+          }
+        }
+        if (j > 1) {
+          Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[i * num_height_points + j - 2], 2);
+          springs.emplace_back(s);
+        }
+        if (i > 1) {
+          Spring s = Spring(&point_masses[i * num_height_points + j], &point_masses[(i - 2) * num_height_points + j], 2);
+          springs.emplace_back(s);
+        }
+      }
+    }
+  }
 
 }
 
