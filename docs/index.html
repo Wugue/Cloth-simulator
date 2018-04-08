@@ -25,7 +25,7 @@
 
 <h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2018</h1>
 <h1 align="middle">Project 4: Cloth Simulator</h1>
-<h2 align="middle">YOUR NAME, CS184-???</h2>
+<h2 align="middle">Eric Tsai, CS184-aaf</h2>
 
 <br><br>
 
@@ -35,6 +35,182 @@
 <p>Give a high-level overview of what you implemented in this project. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the project.</p>
 
 <h2 align="middle">Part I: Masses and springs</h2>
+
+<p>This part was faily straightforward. First I checked the orientation then constructed and added in all the point masses one by one. Then I looped through all the point masses and added in the structual / shearing / bending springs after checking that a valid point mass exists to be at the other end of the spring.</p>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="1-1.png" width="800px" />
+                    <figcaption align="middle">Pinned2</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="1-3.png" width="800px" />
+                    <figcaption align="middle">No Shearing Constraints</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="1-4.png" width="800px" />
+                    <figcaption align="middle">Only Shearing Constraints</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="1-2.png" width="800px" />
+                    <figcaption align="middle">All Constraints</figcaption>
+                </tr>
+            </table>
+        </div>
+
+<h2 align="middle">Part II</h2>
+
+<p>First I applied the external forces to every single point mass. Then I went through all the enabled springs and used Hooke's law to compute the forces acting on the connected point masses. Then with this data, I computed the new point mass positions using Verlet Integration. Finally, I checked if any spring was 10% over its rest length and applied corrections to the associated point masses. With a lower spring constant the springs have less resistance, and the cloth falls more gently like a tissue and ends up with more creases. With a larger spring constant the cloth is more brittle, and falls like a piece of regular paper and ends up with less creases. With lower density, the cloth falls super slowly since gravity acts on it less, and I took my screenshot quite a few seconds in and we see that it's still in the air. With higher density, the cloth falls much faster and more violently. With no damping, the oscillations don't decay, and the cloth flutters wildly as if it was a gas. With high damping, the falling cloth acts a lot more rigid, as if the materials are more solid.</p>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="2-1.png" width="800px" />
+                    <figcaption align="middle">Default Settings</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="2-2.png" width="800px" />
+                    <figcaption align="middle">Low ks</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="2-3.png" width="800px" />
+                    <figcaption align="middle">High ks</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="2-4.png" width="800px" />
+                    <figcaption align="middle">Low Density</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="2-5.png" width="800px" />
+                    <figcaption align="middle">High Density</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="2-6.png" width="800px" />
+                    <figcaption align="middle">Low Damping</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="2-7.png" width="800px" />
+                    <figcaption align="middle">High Damping</figcaption>
+                </tr>
+            </table>
+        </div>
+
+<h2 align="middle">Part III</h2>
+
+<p>For collisions with spheres and planes, I simply checked if a point mass's new position made it go inside the sphere or cross the plane, then adjusted the position back out and applied friction. At ks = 5000, the cloth falls pretty normally over the sphere. At ks = 500, there is much less resistance from the springs, so the cloth is free to wrap a tighter around the shape of the sphere. At ks = 50000, there is a lot of resistance from the springs, and the brittle cloth wraps much less against the sphere's shape. In the last picture we just see how the cloth falls to rest on the surface of the plane.</p>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="3-1.png" width="800px" />
+                    <figcaption align="middle">5000 ks</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="3-3.png" width="800px" />
+                    <figcaption align="middle">500 ks</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="3-2.png" width="800px" />
+                    <figcaption align="middle">50000 ks</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="3-4.png" width="800px" />
+                    <figcaption align="middle">Plane</figcaption>
+                </tr>
+            </table>
+        </div>
+
+<h2 align="middle">Part IV</h2>
+
+<p>Not done yet. Ignore pictures.</p>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="2-1.png" width="800px" />
+                    <figcaption align="middle">0.005 α</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="2-2.png" width="800px" />
+                    <figcaption align="middle">0.05 α</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="2-3.png" width="800px" />
+                    <figcaption align="middle">0.25 α</figcaption>
+                </tr>
+            </table>
+        </div>
 
 
 </body>
