@@ -52,13 +52,17 @@ void Cloth::buildGrid() {
   } else {
     for (int i = 0; i < num_height_points; i++) {
       for (int j = 0; j < num_width_points; j++) {
-        float z = 0;
+        double z = 0;
         if (rand() < 0.5) {
           z = rand()/1000.0;
         } else {
           z = rand()/-1000.0;
         }
-        Vector3D v = Vector3D(j * width/(num_width_points - 1), i, i * height/(num_height_points - 1));
+        z = rand() % 100;
+        z = z / 50000.0 - 1/1000.0;
+        //cout << z;
+        //cout << "new:";
+        Vector3D v = Vector3D(j * width/(num_width_points - 1), i * height/(num_height_points - 1), z);
         bool p = false;
         for (vector<int> vec : pinned) {
           if (vec[0] == j && vec[1] == i) {
@@ -224,19 +228,52 @@ void Cloth::build_spatial_map() {
   map.clear();
 
   // TODO (Part 4.2): Build a spatial map out of all of the point masses.
+  for (PointMass &p : point_masses) {
+    float t = hash_position(p.position);
+    if ( map.find(t) == map.end() ) {
+      map[t] = new vector<PointMass *>();
+    }
+    map[t]->push_back(&p);
+  }
+
 
 }
 
 void Cloth::self_collide(PointMass &pm, double simulation_steps) {
   // TODO (Part 4.3): Handle self-collision for a given point mass.
+  float t = hash_position(pm.position);
+  Vector3D temp;
+  double count = 0;
+  if ( map.find(t) == map.end() ) {
+    float c = 0;
+  } else {
+    for (PointMass *p : *map[t]) {
+      if (p != &pm && (p->position - pm.position).norm() < 2 * thickness) {
+        temp += (pm.position - p->position).unit() * (2 * thickness - (p->position - pm.position).norm());
+        count += 1;
+      }
+    }
+  }
+  if (count > 0) {
+    pm.position += temp/count/simulation_steps;
+  }
 
 }
 
 float Cloth::hash_position(Vector3D pos) {
   // TODO (Part 4.1): Hash a 3D position into a unique float identifier that represents
   // membership in some uniquely identified 3D box volume.
+  //return pos.x + pos.y * 1000 + pos.z * 1000000;
+  //return (pos.x * 31 + pos.y) * 31 + pos.z;
+  // // w = 3 * width / num_width_points, h = 3 * height / num_height_points, and t=max(w,h)
+  float w = 3 * width / num_width_points;
+  float h = 3 * height / num_height_points;
+  float t = max(w, h);
+  float x = floor(pos.x/w);
+  float y = floor(pos.y/h);
+  float z = floor(pos.z/t);
 
-  return 0.f;
+  return (x * 31 + y) * 31 + z;
 }
 
 ///////////////////////////////////////////////////////

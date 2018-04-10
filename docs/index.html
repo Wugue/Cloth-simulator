@@ -76,7 +76,7 @@
 
 <h2 align="middle">Part II</h2>
 
-<p>First I applied the external forces to every single point mass. Then I went through all the enabled springs and used Hooke's law to compute the forces acting on the connected point masses. Then with this data, I computed the new point mass positions using Verlet Integration. Finally, I checked if any spring was 10% over its rest length and applied corrections to the associated point masses. With a lower spring constant the springs have less resistance, and the cloth falls more gently like a tissue and ends up with more creases. With a larger spring constant the cloth is more brittle, and falls like a piece of regular paper and ends up with less creases. With lower density, the cloth falls super slowly since gravity acts on it less, and I took my screenshot quite a few seconds in and we see that it's still in the air. With higher density, the cloth falls much faster and more violently. With no damping, the oscillations don't decay, and the cloth flutters wildly as if it was a gas. With high damping, the falling cloth acts a lot more rigid, as if the materials are more solid.</p>
+<p>First I applied the external forces to every single point mass. Then I went through all the enabled springs and used Hooke's law to compute the forces acting on the connected point masses. Then with this data, I computed the new point mass positions using Verlet Integration. Finally, I checked if any spring was 10% over its rest length and applied corrections to the associated point masses. With a lower spring constant the springs have less resistance, and the cloth falls more gently like a tissue and ends up with more creases. With a larger spring constant the cloth is more brittle, and falls like a piece of regular paper and ends up with less creases. With lower density, the cloth falls super slowly due to gravity, and I took my screenshot quite a few seconds in and we see that it's still in the air. With higher density, the cloth falls much faster and more violently. With no damping, the oscillations don't decay, and the cloth flutters wildly as if it was a gas. With high damping, the falling cloth acts a lot more rigid, as if the materials are more solid.</p>
         <div align="center">
             <table style="width=100%">
                 <tr>
@@ -143,7 +143,7 @@
 
 <h2 align="middle">Part III</h2>
 
-<p>For collisions with spheres and planes, I simply checked if a point mass's new position made it go inside the sphere or cross the plane, then adjusted the position back out and applied friction. At ks = 5000, the cloth falls pretty normally over the sphere. At ks = 500, there is much less resistance from the springs, so the cloth is free to wrap a tighter around the shape of the sphere. At ks = 50000, there is a lot of resistance from the springs, and the brittle cloth wraps much less against the sphere's shape. In the last picture we just see how the cloth falls to rest on the surface of the plane.</p>
+<p>For collisions with spheres and planes, I simply used sphere and plane interseciton formulas and checked if a point mass's new position made it go inside the sphere or cross the plane, then adjusted the position back out and applied friction. At ks = 5000, the cloth falls pretty normally over the sphere. At ks = 500, there is much less resistance from the springs, so the cloth is free to wrap a tighter around the shape of the sphere. At ks = 50000, there is a lot of resistance from the springs, and the brittle cloth wraps much less against the sphere's shape. In the last picture we just see how the cloth falls to rest on the surface of the plane.</p>
         <div align="center">
             <table style="width=100%">
                 <tr>
@@ -183,13 +183,13 @@
 
 <h2 align="middle">Part IV</h2>
 
-<p>Not done yet. Ignore pictures.</p>
+<p>For self collusion, I divided the space into 3d boxes, and assigned each point mass to the box it was located in. Then for each point mass, for each other point mass in the box that's within 2*length distaance to it, I computed the correction vector, and applied a force to the point mass that's the average of all the correction vectors scaled down by simulation_steps. In the first screenshot, we see the cloth as it just starts to fall and create folds. In the second screenshot, we see that the cloth that hit the plane gather into a pile of folds. And in the third screnshot, the cloth has fully fallen into a pile of folds. At lower density, the cloth falls much slower due to gravity and the folds that start to appear midair look much smoother and rounder. At higher density, the cloth falls much faster, and the resulting shape of the folds are much more edgy and rough. At lower spring constant ks, the springs don't really pull the point masses together into folds that much, and the cloth quickly gathers into a fluid-like clump instead of creating big, visible folds. At higher spring constant ks, the springs pull the point masses together more, slowly causing much larger folds consisting of more point masses per fold.</p>
         <div align="center">
             <table style="width=100%">
                 <tr>
                     <td align="middle">
-                    <img src="2-1.png" width="800px" />
-                    <figcaption align="middle">0.005 α</figcaption>
+                    <img src="4-3.png" width="800px" />
+                    <figcaption align="middle">Start</figcaption>
                 </tr>
             </table>
         </div>
@@ -197,8 +197,8 @@
             <table style="width=100%">
                 <tr>
                     <td align="middle">
-                    <img src="2-2.png" width="800px" />
-                    <figcaption align="middle">0.05 α</figcaption>
+                    <img src="4-2.png" width="800px" />
+                    <figcaption align="middle">Middle</figcaption>
                 </tr>
             </table>
         </div>
@@ -206,12 +206,47 @@
             <table style="width=100%">
                 <tr>
                     <td align="middle">
-                    <img src="2-3.png" width="800px" />
-                    <figcaption align="middle">0.25 α</figcaption>
+                    <img src="4-1.png" width="800px" />
+                    <figcaption align="middle">End</figcaption>
                 </tr>
             </table>
         </div>
-
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="4-4.png" width="800px" />
+                    <figcaption align="middle">Low Density</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="4-5.png" width="800px" />
+                    <figcaption align="middle">High Density</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="4-6.png" width="800px" />
+                    <figcaption align="middle">Low ks</figcaption>
+                </tr>
+            </table>
+        </div>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                    <img src="4-7.png" width="800px" />
+                    <figcaption align="middle">High ks</figcaption>
+                </tr>
+            </table>
+        </div>
 
 </body>
 </html>
